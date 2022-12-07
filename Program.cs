@@ -1,6 +1,12 @@
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors();
+
 var app = builder.Build();
+app.UseHttpsRedirection();
+app.UseStaticFiles();
+app.UseRouting();
+
 
 app.MapPost("/teste", (User user) =>
 {
@@ -9,8 +15,9 @@ app.MapPost("/teste", (User user) =>
     if(!user.AuthenticateUser()) return Results.Unauthorized();
 
     return Results.Ok();
-});
+}).AllowAnonymous();
 
+app.UseCors(options => options.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 app.Run();
 
 public class User
